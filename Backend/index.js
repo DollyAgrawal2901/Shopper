@@ -9,7 +9,68 @@ const cors = require("cors");
 const stripe = require("stripe")(process.env.STRIP_BACKEND_KEY);
 
 app.use(express.json());
-app.use(cors());
+
+const allowedOrigins = [
+  "https://shopper-frontend-chi.vercel.app/",
+  "https://shopper-admin-psi.vercel.app/",
+  "http://localhost:5174",
+  "https://localhost:5173",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allow these HTTP methods
+    allowedHeaders: ["Content-Type"], // Specify allowed headers
+  })
+);
+
+// Serve static files from 'public' directory
+app.use("/images", express.static(path.join(__dirname, "upload/images")));
+
+
+const cloudinary = require("cloudinary").v2;
+const streamifier = require("streamifier");
+
+// Configure Cloudinary with the URL
+cloudinary.config({
+  url: process.env.CLOUDINARY_URL,
+});
+
+// Use multer to handle file uploads as streams
+const upload = multer({ storage: multer.memoryStorage() }); // Store files in memory
+
+// Image upload endpoint
+app.post("/upload", upload.single("product-vercel"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  // Convert buffer to stream
+  const stream = streamifier.createReadStream(req.file.buffer);
+
+  // Upload file to Cloudinary
+  cloudinary.uploader
+    .upload_stream({ resource_type: "auto" }, (error, result) => {
+      if (error) {
+        return res.status(500).json({ error: "Error uploading file" });
+      }
+      res.json({
+        success: 1,
+        image_url: result.secure_url, // Cloudinary URL
+      });
+    })
+    .end(req.file.buffer);
+});
+
+
+
 
 mongoose
   .connect(process.env.MONGO_URL)
@@ -34,16 +95,16 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
-app.use("/Images", express.static("Upload/Images"));
+// app.use("/Images", express.static("Upload/Images"));
 
-app.post("/Upload", upload.single("product"), (req, res) => {
-  res.json({
-    success: 1,
-    image_url: `http://localhost:${port}/Images/${req.file.filename}`,
-  });
-});
+// app.post("/Upload", upload.single("product"), (req, res) => {
+//   res.json({
+//     success: 1,
+//     image_url: `http://localhost:${port}/Images/${req.file.filename}`,
+//   });
+// });
 
 const Product = mongoose.model("Product", {
   id: {

@@ -11,8 +11,8 @@ const stripe = require("stripe")(process.env.STRIP_BACKEND_KEY);
 app.use(express.json());
 
 const allowedOrigins = [
-  "https://shopper-frontend-chi.vercel.app/",
-  "https://shopper-admin-psi.vercel.app/",
+  "https://shopper-frontend-chi.vercel.app",
+  "https://shopper-admin-psi.vercel.app",
   "http://localhost:5174",
   "https://localhost:5173",
 ];

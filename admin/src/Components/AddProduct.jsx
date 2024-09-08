@@ -5,6 +5,8 @@
 
     const [image, setImage] = useState(false)
     const baseURL =  import.meta.env.VITE_API_URL;
+    console.log(baseURL); // Make sure this is the correct URL
+
 
     const [productDetails, setProductDetails] = useState({
         name:'',

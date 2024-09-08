@@ -31,7 +31,7 @@
         let formData = new FormData()
         formData.append('product',image)
 
-        await fetch(`${baseURL}/Upload`,{
+        await fetch(`${baseURL}/upload`,{
             method:'POST',
             headers:{
                 Accept:'application/json'  

@@ -47,7 +47,7 @@ cloudinary.config({
 const upload = multer({ storage: multer.memoryStorage() }); // Store files in memory
 
 // Image upload endpoint
-app.post("/Upload", upload.single("product-vercel"), (req, res) => {
+app.post("/upload", upload.single("product-vercel"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }

@@ -30,7 +30,7 @@
         let formData = new FormData()
         formData.append('product',image)
 
-        await fetch(`${baseURL}/Upload`,{
+        await fetch(`https://shopper-backend-gamma.vercel.app/Upload`,{
             method:'POST',
             headers:{
                 Accept:'application/json'  

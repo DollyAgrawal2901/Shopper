@@ -85,15 +85,15 @@ app.get("/", (req, res) => {
   res.send("Express App is Running");
 });
 
-const storage = multer.diskStorage({
-  destination: "./Upload/Images",
-  filename: (req, file, cb) => {
-    return cb(
-      null,
-      `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
-    );
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: "./Upload/Images",
+//   filename: (req, file, cb) => {
+//     return cb(
+//       null,
+//       `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
+//     );
+//   },
+// });
 
 // const upload = multer({ storage: storage });
 
@@ -106,7 +106,7 @@ const storage = multer.diskStorage({
 //   });
 // });
 
-const Product = mongoose.model("Product", {
+const Product = mongoose.model("Product-vercel", {
   id: {
     type: Number,
     required: true,

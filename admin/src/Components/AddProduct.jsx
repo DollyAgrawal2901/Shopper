@@ -4,7 +4,7 @@
  export default function AddProduct() {
 
     const [image, setImage] = useState(false)
-    // const baseURL =  import.meta.env.VITE_API_URL;
+    const baseURL =  import.meta.env.VITE_API_URL;
 
 
     const [productDetails, setProductDetails] = useState({
@@ -31,7 +31,7 @@
         let formData = new FormData()
         formData.append('product',image)
 
-        await fetch('https://shopper-backend-gamma.vercel.app/Upload',{
+        await fetch(`${baseURL}/Upload`,{
             method:'POST',
             headers:{
                 Accept:'application/json'  
@@ -42,7 +42,7 @@
         if(responseData.success){
             product.image = responseData.image_url
             console.log(product)
-            await fetch('https://shopper-backend-gamma.vercel.app/addproduct',{
+            await fetch(`${baseURL}/addproduct`,{
                 method:'POST',
                 headers:{
                     Accept:'application/json',

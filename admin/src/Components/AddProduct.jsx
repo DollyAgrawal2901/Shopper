@@ -4,6 +4,7 @@
  export default function AddProduct() {
 
     const [image, setImage] = useState(false)
+    const baseURL =  import.meta.env.VITE_API_URL;
 
     const [productDetails, setProductDetails] = useState({
         name:'',
@@ -29,7 +30,7 @@
         let formData = new FormData()
         formData.append('product',image)
 
-        await fetch('http://localhost:4000/Upload',{
+        await fetch(`${baseURL}/Upload`,{
             method:'POST',
             headers:{
                 Accept:'application/json'  
@@ -40,7 +41,7 @@
         if(responseData.success){
             product.image = responseData.image_url
             console.log(product)
-            await fetch('http://localhost:4000/addproduct',{
+            await fetch(`${baseURL}/addproduct`,{
                 method:'POST',
                 headers:{
                     Accept:'application/json',

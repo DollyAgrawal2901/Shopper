@@ -5,10 +5,11 @@ const ListProduct = () => {
   const [allProducts, setAllProducts] = useState([]);
   const [isEditing, setIsEditing] = useState(null); // Track which product is being edited
   const [editedProduct, setEditedProduct] = useState({}); // Store edited product details
+  const baseURL =  import.meta.env.VITE_API_URL;
 
   const fetchInfo = async () => {
     try {
-      const response = await fetch("http://localhost:4000/allproduct");
+      const response = await fetch(`${baseURL}/allproduct`);
       const data = await response.json();
       setAllProducts(data);
     } catch (error) {
@@ -22,7 +23,7 @@ const ListProduct = () => {
 
   const togglePopularStatus = async (productId, isPopular) => {
     try {
-      const response = await fetch("http://localhost:4000/togglePopular", {
+      const response = await fetch(`${baseURL}/togglePopular`, {
         method: "POST",
         headers: {
           "Accept": "application/json",
@@ -43,7 +44,7 @@ const ListProduct = () => {
 
   const removeProduct = async (id) => {
     try {
-      const response = await fetch("http://localhost:4000/removeproduct", {
+      const response = await fetch(`${baseURL}/removeproduct`, {
         method: "POST",
         headers: {
           "Accept": "application/json",
@@ -75,7 +76,7 @@ const ListProduct = () => {
 
   const handleSaveClick = async () => {
     try {
-      const response = await fetch("http://localhost:4000/updateproduct", {
+      const response = await fetch(`${baseURL}/updateproduct`, {
         method: "POST",
         headers: {
           "Accept": "application/json",

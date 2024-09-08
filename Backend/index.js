@@ -35,6 +35,15 @@ app.use(
 app.use("/Images", express.static(path.join(__dirname, "Upload/Images")));
 
 
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB:", err);
+  });
+
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
 
@@ -72,14 +81,6 @@ app.post("/upload", upload.single("product-vercel"), (req, res) => {
 
 
 
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.error("Failed to connect to MongoDB:", err);
-  });
 
 app.get("/", (req, res) => {
   res.send("Express App is Running");

@@ -32,7 +32,7 @@ app.use(
 );
 
 // Serve static files from 'public' directory
-app.use("/images", express.static(path.join(__dirname, "upload/images")));
+app.use("/Images", express.static(path.join(__dirname, "Upload/Images")));
 
 
 const cloudinary = require("cloudinary").v2;
@@ -47,7 +47,7 @@ cloudinary.config({
 const upload = multer({ storage: multer.memoryStorage() }); // Store files in memory
 
 // Image upload endpoint
-app.post("/upload", upload.single("product-vercel"), (req, res) => {
+app.post("/Upload", upload.single("product-vercel"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }

@@ -12,7 +12,7 @@ const success_redirect_url = process.env.SUCCESS_REDIRECT;
 const app = express();
 app.use(express.json());
 
-// Configure allowed origins for CORS
+// Configure allowed origins for CORS  
 const allowedOrigins = [
   "https://shopper-frontend-chi.vercel.app",
   "https://shopper-admin-psi.vercel.app",

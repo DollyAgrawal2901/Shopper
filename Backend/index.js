@@ -32,7 +32,7 @@ app.use(
 );
 
 // Serve static files from 'public' directory
-app.use("/images", express.static(path.join(__dirname, "upload/images")));
+app.use("/Images", express.static(path.join(__dirname, "Upload/Images")));
 
 
 mongoose

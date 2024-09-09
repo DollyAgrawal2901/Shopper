@@ -10,6 +10,7 @@ export default function Product() {
   const { all_product } = useContext(ShopContext);
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const baseURL =  import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const localProduct = all_product.find((e) => e.id === Number(productId));
@@ -20,7 +21,7 @@ export default function Product() {
       // Fetch product from MongoDB if not found locally
       const fetchProductFromDB = async () => {
         try {
-          const response = await fetch(`http://localhost:4000/product/${productId}`);
+          const response = await fetch(`${baseURL}/product/${productId}`);
           if (response.ok) {
             const data = await response.json();
             setProduct(data);

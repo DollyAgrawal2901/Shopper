@@ -8,6 +8,7 @@ export default function ShopCategory(props) {
   const [products, setProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const baseURL =  import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Set local products from context
@@ -17,7 +18,7 @@ export default function ShopCategory(props) {
   useEffect(() => {
     const fetchNewProducts = async () => {
       try {
-        const response = await fetch('http://localhost:4000/allproduct');
+        const response = await fetch(`${baseURL}/allproduct`);
         if (response.ok) {
           const data = await response.json();
           setNewProducts(data);

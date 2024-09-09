@@ -3,12 +3,13 @@ import Item from '../Items/Item';
 
 export default function Popular() {
   const [popularProducts, setPopularProducts] = useState([]);
+  const baseURL =  import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Fetch popular products from the backend
     const fetchPopularProducts = async () => {
       try {
-        const response = await fetch("http://localhost:4000/popular-products");
+        const response = await fetch(`${baseURL}/popular-products`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

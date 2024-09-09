@@ -10,11 +10,12 @@ export default function CartItems() {
 
     // State to hold products fetched from MongoDB
     const [mongoProducts, setMongoProducts] = useState([]);
+    const baseURL =  import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchMongoProducts = async () => {
             try {
-                const response = await fetch('http://localhost:4000/allproduct');
+                const response = await fetch(`${baseURL}/allproduct`);
                 if (response.ok) {
                     const data = await response.json();
                     setMongoProducts(data);
@@ -69,7 +70,7 @@ export default function CartItems() {
         };
 
         try {
-            const response = await fetch('http://localhost:4000/create-checkout-session', {
+            const response = await fetch(`${baseURL}/create-checkout-session`, {
                 method: "POST",
                 headers: headers,
                 body: JSON.stringify(body),

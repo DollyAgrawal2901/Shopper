@@ -3,12 +3,13 @@ import Item from './Items/Item';
 
 export default function NewCollection() {
   const [newCollection, setNewCollection] = useState([]);
+  const baseURL =  import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Fetch new collection data from backend
     const fetchNewCollections = async () => {
       try {
-        const response = await fetch("http://localhost:4000/newcollections");
+        const response = await fetch(`${baseURL}/newcollections`);
         const data = await response.json();
         setNewCollection(data);
       } catch (error) {

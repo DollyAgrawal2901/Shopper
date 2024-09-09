@@ -1,15 +1,17 @@
 require("dotenv").config();
-const port = process.env.PORT;
 const express = require("express");
-const app = express();
 const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
-const stripe = require("stripe")(process.env.STRIP_BACKEND_KEY);
+const stripe = require("stripe")(process.env.STRIPE_BACKEND_KEY); // Corrected key name
+const cloudinary = require("cloudinary").v2;
+const streamifier = require("streamifier");
 
+const app = express();
 app.use(express.json());
 
+// Configure allowed origins for CORS
 const allowedOrigins = [
   "https://shopper-frontend-chi.vercel.app",
   "https://shopper-admin-psi.vercel.app",
@@ -26,38 +28,32 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allow these HTTP methods
-    allowedHeaders: ["Content-Type"], // Specify allowed headers
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
   })
 );
 
 // Serve static files from 'public' directory
 app.use("/Images", express.static(path.join(__dirname, "Upload/Images")));
 
-
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URL)
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.error("Failed to connect to MongoDB:", err);
-  });
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Failed to connect to MongoDB:", err));
 
+// Default route
 app.get("/", (req, res) => {
   res.send("Express App is Running");
 });
 
-const cloudinary = require("cloudinary").v2;
-const streamifier = require("streamifier");
-
-// Configure Cloudinary with the URL
+// Configure Cloudinary
 cloudinary.config({
   url: process.env.CLOUDINARY_URL,
 });
 
-// Use multer to handle file uploads as streams
-const upload = multer({ storage: multer.memoryStorage() }); // Store files in memory
+// Use multer to handle file uploads
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Image upload endpoint
 app.post("/upload", upload.single("product-vercel"), (req, res) => {
@@ -65,25 +61,23 @@ app.post("/upload", upload.single("product-vercel"), (req, res) => {
     return res.status(400).json({ error: "No file uploaded" });
   }
 
-  // Convert buffer to stream
   const stream = streamifier.createReadStream(req.file.buffer);
 
-  // Upload file to Cloudinary
   cloudinary.uploader
     .upload_stream({ resource_type: "auto" }, (error, result) => {
       if (error) {
         return res.status(500).json({ error: "Error uploading file" });
       }
       res.json({
-        success: 1,
+        success: true,
         image_url: result.secure_url, // Cloudinary URL
       });
     })
     .end(req.file.buffer);
 });
 
-
-const Product = mongoose.model("Product-vercel", {
+// Define the Product model
+const Product = mongoose.model("Product", {
   id: {
     type: Number,
     required: true,
@@ -116,50 +110,65 @@ const Product = mongoose.model("Product-vercel", {
     type: Boolean,
     default: true,
   },
-  popular: { type: Boolean, default: false }, // New field added
+  popular: {
+    type: Boolean,
+    default: false,
+  },
 });
 
+// Endpoint to add a product
 app.post("/addproduct", async (req, res) => {
-  let products = await Product.find({});
-  let id;
-  if (products.length > 0) {
-    let last_product_array = products.slice(-1);
-    let last_product = last_product_array[0];
-    id = last_product.id + 1;
-  } else {
-    id = 40; // Start id from 40 if no products exist
+  try {
+    let products = await Product.find({});
+    let id = products.length > 0 ? products[products.length - 1].id + 1 : 40;
+
+    const product = new Product({
+      id: id,
+      name: req.body.name,
+      image: req.body.image,
+      category: req.body.category,
+      new_price: req.body.new_price,
+      old_price: req.body.old_price,
+    });
+
+    await product.save();
+    res.json({
+      success: true,
+      name: req.body.name,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to add product" });
   }
-
-  const product = new Product({
-    id: id,
-    name: req.body.name,
-    image: req.body.image,
-    category: req.body.category,
-    new_price: req.body.new_price,
-    old_price: req.body.old_price,
-  });
-
-  await product.save();
-  res.json({
-    success: true,
-    name: req.body.name,
-  });
 });
 
-
+// Endpoint to remove a product
 app.post("/removeproduct", async (req, res) => {
-  await Product.findOneAndDelete({ id: req.body.id });
-  res.json({
-    success: true,
-    name: req.body.name,
-  });
+  try {
+    await Product.findOneAndDelete({ id: req.body.id });
+    res.json({
+      success: true,
+      name: req.body.name,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to remove product" });
+  }
 });
 
+// Endpoint to get all products
 app.get("/allproduct", async (req, res) => {
-  let products = await Product.find({});
-  res.send(products);
+  try {
+    let products = await Product.find({});
+    res.json(products);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch products" });
+  }
 });
 
+// Endpoint to create a checkout session
 app.post("/create-checkout-session", async (req, res) => {
   try {
     const { items } = req.body;
@@ -187,7 +196,7 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-// Get Single Product by ID Endpoint
+// Endpoint to get a single product by ID
 app.get("/product/:id", async (req, res) => {
   try {
     const product = await Product.findOne({ id: parseInt(req.params.id, 10) });
@@ -201,19 +210,19 @@ app.get("/product/:id", async (req, res) => {
   }
 });
 
-// New collection Endpoint
+// Endpoint to fetch new collections
 app.get("/newcollections", async (req, res) => {
   try {
     const products = await Product.find({}).sort({ date: -1 }).limit(8); // Fetch the 8 latest products
     console.log("New Collections Fetched");
-    res.json(products); // Send the products as a response
+    res.json(products);
   } catch (error) {
     console.error("Error fetching new collections:", error);
     res.status(500).json({ message: "Failed to fetch new collections" });
   }
 });
 
-//Endpoint to fetch popular Products
+// Endpoint to fetch popular products
 app.get("/popular-products", async (req, res) => {
   try {
     const popularProducts = await Product.find({ popular: true });
@@ -225,10 +234,10 @@ app.get("/popular-products", async (req, res) => {
   }
 });
 
+// Endpoint to toggle popular status
 app.post("/togglePopular", async (req, res) => {
   const { id, isPopular } = req.body;
   try {
-    // Assuming `Product` is your model
     const product = await Product.findOneAndUpdate(
       { id: id },
       { $set: { popular: isPopular } },
@@ -240,8 +249,8 @@ app.post("/togglePopular", async (req, res) => {
   }
 });
 
-// Route to update all products with the 'popular' field use Thunder-client POST request to update all existing fields
-app.post('/update-all-products', async (req, res) => {
+// Route to update all products with the 'popular' field
+app.post("/update-all-products", async (req, res) => {
   try {
     const result = await Product.updateMany({}, { $set: { popular: false } });
     res.json({
@@ -249,24 +258,21 @@ app.post('/update-all-products', async (req, res) => {
       message: `Updated ${result.nModified} products`,
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error updating products' });
+    res
+      .status(500)
+      .json({ success: false, message: "Error updating products" });
   }
 });
 
+// Endpoint to update a product
 app.post("/updateproduct", async (req, res) => {
   const { id, name, old_price, new_price, category } = req.body;
 
   try {
-    // Use `findOneAndUpdate` to match by `id`, not `_id`
     const updatedProduct = await Product.findOneAndUpdate(
-      { id }, // Matching the product by `id` field
-      {
-        name,
-        old_price,
-        new_price,
-        category,
-      },
-      { new: true } // Return the updated product
+      { id },
+      { name, old_price, new_price, category },
+      { new: true }
     );
 
     if (!updatedProduct) {
@@ -280,7 +286,8 @@ app.post("/updateproduct", async (req, res) => {
   }
 });
 
-
+// Start the server
+const port = process.env.PORT || 4000; // Fallback port if not set in .env
 app.listen(port, (error) => {
   if (!error) {
     console.log("Server running on port: " + port);

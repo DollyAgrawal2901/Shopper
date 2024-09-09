@@ -30,6 +30,7 @@
 
         let formData = new FormData()
         formData.append('Product-vercel',image)
+        
 
         await fetch(`${baseURL}/Upload`,{
             method:'POST',

@@ -16,7 +16,8 @@ const allowedOrigins = [
   "https://shopper-frontend-chi.vercel.app",
   "https://shopper-admin-psi.vercel.app",
   "http://localhost:5174",
-  "http://localhost:5173",
+  "https://localhost:5173",
+  
 ];
 
 app.use(
@@ -220,7 +221,7 @@ app.get("/newcollections", async (req, res) => {
     console.error("Error fetching new collections:", error);
     res.status(500).json({ message: "Failed to fetch new collections" });
   }
-});
+}); 
 
 // Endpoint to fetch popular products
 app.get("/popular-products", async (req, res) => {

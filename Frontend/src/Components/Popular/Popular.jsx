@@ -9,9 +9,10 @@ export default function Popular() {
     // Fetch popular products from the backend
     const fetchPopularProducts = async () => {
       try {
-        const response = await fetch(`${baseURL}/popular-products`);
+        const response = await fetch(`${baseURL}/popular-products`);  
+        
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Network response was not ok"); 
         }
         const data = await response.json();
         setPopularProducts(data);

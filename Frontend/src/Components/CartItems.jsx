@@ -9,7 +9,7 @@ export default function CartItems() {
     const { all_product, cartItems, removeFromCart, getTotalCartAmount } = useContext(ShopContext);
 
     // State to hold products fetched from MongoDB
-    const [mongoProducts, setMongoProducts] = useState([]);
+    const [mongoProducts, setMongoProducts] = useState([]);   
     const baseURL =  import.meta.env.VITE_API_URL;
     
 

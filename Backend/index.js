@@ -32,7 +32,7 @@ app.use(
 );
 
 // Serve static files from 'public' directory
-app.use("/Images", express.static(path.join(__dirname, "Upload/Images")));
+app.use("/images", express.static(path.join(__dirname, "upload/images")));
 
 
 mongoose
@@ -43,6 +43,10 @@ mongoose
   .catch((err) => {
     console.error("Failed to connect to MongoDB:", err);
   });
+
+app.get("/", (req, res) => {
+  res.send("Express App is Running");
+});
 
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
@@ -82,9 +86,7 @@ app.post("/upload", upload.single("product-vercel"), (req, res) => {
 
 
 
-app.get("/", (req, res) => {
-  res.send("Express App is Running");
-});
+
 
 // const storage = multer.diskStorage({
 //   destination: "./Upload/Images",

@@ -7,6 +7,7 @@ const cors = require("cors");
 const stripe = require("stripe")(process.env.STRIPE_BACKEND_KEY); // Corrected key name
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
+const success_redirect_url = process.env.SUCCESS_REDIRECT;
 
 const app = express();
 app.use(express.json());
@@ -17,7 +18,7 @@ const allowedOrigins = [
   "https://shopper-admin-psi.vercel.app",
   "http://localhost:5174",
   "https://localhost:5173",
-  
+
 ];
 
 app.use(
@@ -186,8 +187,8 @@ app.post("/create-checkout-session", async (req, res) => {
         quantity: item.quantity,
       })),
       mode: "payment",
-      success_url: "https://localhost:5173/success",
-      cancel_url: "https://localhost:5173/cancel",
+      success_url: `${success_redirect_url}/success`,
+      cancel_url: `${success_redirect_url}/cancel`,
     });
 
     res.json({ sessionId: session.id });

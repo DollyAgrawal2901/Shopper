@@ -17,6 +17,8 @@ const allowedOrigins = [
   "https://shopper-frontend-chi.vercel.app",
   "https://shopper-admin-psi.vercel.app",
   "http://localhost:5174",
+  "https://localhost:5174",
+  "http://localhost:5173",
   "https://localhost:5173",
 
 ];

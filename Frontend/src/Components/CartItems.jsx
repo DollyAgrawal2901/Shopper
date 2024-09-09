@@ -31,7 +31,7 @@ export default function CartItems() {
     }, []);
 
     // Combine local and MongoDB products
-    const combinedProducts = [...mongoProducts];
+    const combinedProducts = [...all_product, ...mongoProducts];
 
     // Function to get product details by ID
     const getProductById = (id) => {

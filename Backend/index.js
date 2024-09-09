@@ -83,32 +83,6 @@ app.post("/upload", upload.single("product-vercel"), (req, res) => {
 });
 
 
-
-
-
-
-
-// const storage = multer.diskStorage({
-//   destination: "./Upload/Images",
-//   filename: (req, file, cb) => {
-//     return cb(
-//       null,
-//       `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
-//     );
-//   },
-// });
-
-// const upload = multer({ storage: storage });
-
-// app.use("/Images", express.static("Upload/Images"));
-
-// app.post("/Upload", upload.single("product"), (req, res) => {
-//   res.json({
-//     success: 1,
-//     image_url: `http://localhost:${port}/Images/${req.file.filename}`,
-//   });
-// });
-
 const Product = mongoose.model("Product-vercel", {
   id: {
     type: Number,

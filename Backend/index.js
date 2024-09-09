@@ -130,7 +130,7 @@ app.post("/addproduct", async (req, res) => {
       id: id,
       name: req.body.name,
       image: req.body.image,
-      category: req.body.category,
+      category: req.body.category, 
       new_price: req.body.new_price,
       old_price: req.body.old_price,
     });

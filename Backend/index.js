@@ -119,32 +119,38 @@ const Product = mongoose.model("Product-vercel", {
   popular: { type: Boolean, default: false }, // New field added
 });
 
+// Add Product Endpoint
 app.post("/addproduct", async (req, res) => {
-  let products = await Product.find({});
-  let id;
-  if (products.length > 0) {
-    let last_product_array = products.slice(-1);
-    let last_product = last_product_array[0];
-    id = last_product.id + 1;
-  } else {
-    id = 40; // Start id from 40 if no products exist
+  try {
+    // Find the highest current product ID
+    let highestProduct = await Product.findOne({}, "id")
+      .sort({ id: -1 })
+      .limit(1);
+
+    // Calculate the next ID, starting from 40
+    let nextId = highestProduct ? highestProduct.id + 1 : 40;
+
+    const product = new Product({
+      id: nextId,
+      name: req.body.name,
+      image: req.body.image,
+      category: req.body.category,
+      new_price: req.body.new_price,
+      old_price: req.body.old_price,
+    });
+
+    await product.save();
+    console.log("Product saved successfully");
+    res.json({
+      success: true,
+      name: req.body.name,
+    });
+  } catch (error) {
+    console.error("Error adding product:", error);
+    res.status(500).json({ success: false, message: "Failed to add product" });
   }
-
-  const product = new Product({
-    id: id,
-    name: req.body.name,
-    image: req.body.image,
-    category: req.body.category,
-    new_price: req.body.new_price,
-    old_price: req.body.old_price,
-  });
-
-  await product.save();
-  res.json({
-    success: true,
-    name: req.body.name,
-  });
 });
+
 
 
 app.post("/removeproduct", async (req, res) => {

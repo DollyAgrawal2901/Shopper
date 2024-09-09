@@ -16,7 +16,7 @@ const allowedOrigins = [
   "https://shopper-frontend-chi.vercel.app",
   "https://shopper-admin-psi.vercel.app",
   "http://localhost:5174",
-  "https://localhost:5173",
+  "http://localhost:5173",
 ];
 
 app.use(
@@ -56,7 +56,7 @@ cloudinary.config({
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Image upload endpoint
-app.post("/upload", upload.single("product-vercel"), (req, res) => {
+app.post("/Upload", upload.single("Product-vercel"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
@@ -77,7 +77,7 @@ app.post("/upload", upload.single("product-vercel"), (req, res) => {
 });
 
 // Define the Product model
-const Product = mongoose.model("Product", {
+const Product = mongoose.model("Product-vercel", {
   id: {
     type: Number,
     required: true,

@@ -54,7 +54,7 @@ app.get("/", (req, res) => {
 // Configure Cloudinary
 cloudinary.config({
   url: process.env.CLOUDINARY_URL,
-});
+}); 
 
 // Use multer to handle file uploads
 const upload = multer({ storage: multer.memoryStorage() });

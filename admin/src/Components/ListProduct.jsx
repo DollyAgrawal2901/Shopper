@@ -7,7 +7,7 @@ const ListProduct = () => {
   const [editedProduct, setEditedProduct] = useState({}); // Store edited product details
   const baseURL =  import.meta.env.VITE_API_URL;
       
-  const fetchInfo = async () => {
+  const fetchInfo = async () => {  
     try {
       const response = await fetch(`${baseURL}/allproduct`);
       const data = await response.json();

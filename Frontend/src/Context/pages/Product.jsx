@@ -10,6 +10,8 @@ export default function Product() {
   const { all_product } = useContext(ShopContext);
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
   const baseURL =  import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -17,8 +19,8 @@ export default function Product() {
 
     if (localProduct) {
       setProduct(localProduct);
+      setLoading(false); // Set loading to false
     } else {
-      // Fetch product from MongoDB if not found locally
       const fetchProductFromDB = async () => {
         try {
           const response = await fetch(`${baseURL}/product/${productId}`);
@@ -26,18 +28,25 @@ export default function Product() {
             const data = await response.json();
             setProduct(data);
           } else {
-            console.error("Product not found in MongoDB");
+            setError("Product not found in MongoDB");
           }
         } catch (error) {
+          setError("Error fetching product from MongoDB");
           console.error("Error fetching product from MongoDB:", error);
+        } finally {
+          setLoading(false); // Set loading to false
         }
       };
       fetchProductFromDB();
     }
   }, [all_product, productId]);
 
-  if (!product) {
+  if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>; // Display error message
   }
 
   return (
@@ -45,7 +54,7 @@ export default function Product() {
       <Breadcrum product={product} />
       <ProductDisplay product={product} />
       <DescriptionBox />
-      <RelatedProducts />
+      <RelatedProducts currentCategory={product.category} />
     </div>
   );
 }

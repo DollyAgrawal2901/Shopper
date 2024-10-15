@@ -1,42 +1,52 @@
 import { useContext, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import logo from "./assets/logo.png";
 import cart_icon from "./assets/cart_icon.png";
-import { Link } from "react-router-dom";
 import { ShopContext } from "../Context/ShopContext";
-import nav_dropdown from './assets/nav_dropdown.png'
 
 export default function Navbar() {
   const [menu, setMenu] = useState("shop");
-  const {getTotalCartItems} = useContext(ShopContext)
-  // const menuRef = useRef()
+  const { getTotalCartItems } = useContext(ShopContext);
+  const navigate = useNavigate(); // Initialize useNavigate
 
-  // const dropdown_toggle = (e) =>{
-  //     menuRef.current.classList.toggle('md:flex');
-  //     e.target.classList.toggle('rotate-90');
-  //   };
+  // Check if user is logged in
+  const isLoggedIn = Boolean(localStorage.getItem('authToken'));
+
+  // Handle login/logout
+  const handleAuthClick = () => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      // User is logged in; handle logout
+      localStorage.removeItem('authToken');
+      window.location.reload(); // Reload to update navbar
+      navigate('/'); // Redirect to home
+    } else {
+      // User is not logged in; navigate to login page
+      navigate('/login');
+    }
+  };
 
   const Forli =
     "flex flex-col items-center justify-center gap-3 cursor-pointer";
   return (
     <div className="flex justify-around p-[16px] shadow-[0_1px_3px_-2px_rgba(0,0,0,0.5)] items-center">
       <div className="flex items-center gap-10">
-        <img  src={logo} alt="" />
-        <Link to='/'><p className="text-[#171717] text-[38px] font-semibold cursor-pointer">SHOPPER</p></Link>
+        <img src={logo} alt="" />
+        <Link to="/">
+          <p className="text-[#171717] text-[38px] font-semibold cursor-pointer">
+            SHOPPER
+          </p>
+        </Link>
       </div>
-      {/* <button onClick={dropdown_toggle} className="hidden md:block md:w-[30px] md:rotate-[-90deg] md:duration-[0.5s]" ><img src={nav_dropdown} alt=""/></button> */}
-      <ul /*ref={menuRef}*/ className="flex items-center list-none gap-[50px] text-[#626262] text-[20px] font-medium">
+      <ul className="flex items-center list-none gap-[50px] text-[#626262] text-[20px] font-medium">
         <li
           onClick={() => {
             setMenu("shop");
           }}
           className={Forli}
         >
-          <Link to='/'>Shop</Link>
-          {menu === "shop" ? (
-            <hr className="border-none w-[80%] h-[3px] rounded-[10px] bg-[#FF4141]" />
-          ) : (
-            <></>
-          )}
+          <Link to="/">Shop</Link>
+          {menu === "shop" && <hr className="border-none w-[80%] h-[3px] rounded-[10px] bg-[#FF4141]" />}
         </li>
         <li
           onClick={() => {
@@ -44,11 +54,8 @@ export default function Navbar() {
           }}
           className={Forli}
         >
-          <Link to='/mens'>Men</Link>{menu === "mens" ? (
-            <hr className="border-none w-[80%] h-[3px] rounded-[10px] bg-[#FF4141]" />
-          ) : (
-            <></>
-          )}
+          <Link to="/mens">Men</Link>
+          {menu === "mens" && <hr className="border-none w-[80%] h-[3px] rounded-[10px] bg-[#FF4141]" />}
         </li>
         <li
           onClick={() => {
@@ -56,11 +63,8 @@ export default function Navbar() {
           }}
           className={Forli}
         >
-          <Link to='/womens'>Women</Link> {menu === "womens" ? (
-            <hr className="border-none w-[80%] h-[3px] rounded-[10px] bg-[#FF4141]" />
-          ) : (
-            <></>
-          )}
+          <Link to="/womens">Women</Link>
+          {menu === "womens" && <hr className="border-none w-[80%] h-[3px] rounded-[10px] bg-[#FF4141]" />}
         </li>
         <li
           onClick={() => {
@@ -68,18 +72,32 @@ export default function Navbar() {
           }}
           className={Forli}
         >
-          <Link to='/kids'>Kids</Link> {menu === "kids" ? (
-            <hr className="border-none w-[80%] h-[3px] rounded-[10px] bg-[#FF4141]" />
-          ) : (
-            <></>
-          )}
+          <Link to="/kids">Kids</Link>
+          {menu === "kids" && <hr className="border-none w-[80%] h-[3px] rounded-[10px] bg-[#FF4141]" />}
         </li>
       </ul>
       <div className="flex items-center gap-[45px]">
-      <Link to='/login'><button className="w-[157px] h-[58px] outline-none border border-gray-500 rounded-[75px] text-[#515151] text-[20px] font-medium bg-white cursor-pointer active:bg-slate-500">
-          Login
-        </button></Link>
-        <Link to='/cart'><img src={cart_icon} alt="" /></Link>
+        {/* Login/Logout button */}
+        <button
+          onClick={handleAuthClick}
+          className="w-[157px] h-[58px] outline-none border border-gray-500 rounded-[75px] text-[#515151] text-[20px] font-medium bg-white cursor-pointer active:bg-slate-500"
+        >
+          {isLoggedIn ? "Logout" : "Login"}
+        </button>
+        {/* Add Profile Section */}
+        {isLoggedIn && (
+          <button
+            onClick={() => navigate("/profile")} // Redirect to profile page
+            className="bg-gradient-to-r from-red-400 via-purple-500 to-blue-300 
+               rounded-full h-10 w-10 flex items-center justify-center 
+               transition-all ease-in-out duration-200 hover:scale-105"
+          >
+            <span className="text-white font-bold">S</span>
+          </button>
+        )}
+        <Link to="/cart">
+          <img src={cart_icon} alt="" />
+        </Link>
         <div className="w-[22px] h-[22px] flex items-center justify-center mt-[-35px] ml-[-55px] rounded-[11px] text-[14px] bg-red-400 text-white">
           {getTotalCartItems()}
         </div>

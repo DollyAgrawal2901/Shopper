@@ -29,7 +29,7 @@ export default function AddProduct() {
     let product = productDetails;
 
     let formData = new FormData();
-    formData.append('product', image);
+    formData.append('Product-vercel', image);
 
     await fetch(`${baseURL}/Upload`, {
       method: 'POST',

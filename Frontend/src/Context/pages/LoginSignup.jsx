@@ -12,6 +12,8 @@ export default function LoginSignup() {
   const [errors, setErrors] = useState({});
   const [isSignup, setIsSignup] = useState(false); // Start with Login page
   const baseURL =  import.meta.env.VITE_API_URL;
+  const AdminPanelUrl = import.meta.env.VITE_ADMINPANEL_URL; // Admin Panel URL
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -66,9 +68,19 @@ export default function LoginSignup() {
         }, 3000);
       } else {
         localStorage.setItem('authToken', data.token);
+        // Delay the redirection by 2 seconds for login
         setTimeout(() => {
-          window.location.replace("/");
-        }, 3000); // Redirect after 3 seconds
+          localStorage.setItem('authToken', data.token); // Store the token in local storage
+
+          // Check if the logged-in user is the admin
+          if (email === 'adminshopper@gmail.com') {
+            window.open(AdminPanelUrl, '_blank'); // Open the admin panel in a new tab
+            window.location.replace("/");
+            
+          } else {
+            window.location.replace("/"); // Redirect normal users to homepage
+          }
+        }, 3000);
       }
     } catch (error) {
       console.error(error);

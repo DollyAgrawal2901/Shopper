@@ -2,13 +2,14 @@ import React, { useEffect, useState, useContext } from 'react';
 import { ShopContext } from '../ShopContext';
 import dropdown_icon from '../../Components/assets/dropdown_icon.png';
 import Item from '../../Components/Items/Item';
+import Loader from './Loader'; // Import the Loader component
 
 export default function ShopCategory(props) {
   const { all_product, setAllProducts } = useContext(ShopContext);
   const [products, setProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const baseURL =  import.meta.env.VITE_API_URL;
+  const [loading, setLoading] = useState(true); // Add loading state
+  const baseURL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Set local products from context
@@ -21,23 +22,27 @@ export default function ShopCategory(props) {
         const response = await fetch(`${baseURL}/allproduct`);
         if (response.ok) {
           const data = await response.json();
-          setNewProducts(data);
-          if (setAllProducts) setAllProducts(data); // Update context if needed
+          
+          // Ensure the loader shows for at least 1 second
+          setTimeout(() => {
+            setNewProducts(data);
+            setLoading(false); // Stop loading once data is fetched
+            if (setAllProducts) setAllProducts(data); // Update context if needed
+          }, 1000); // 1-second minimum loader time
         } else {
           console.error("Error fetching new products from MongoDB");
         }
       } catch (error) {
         console.error("Error fetching new products:", error);
       } finally {
-        setLoading(false);
+        if (!loading) setLoading(false); // Ensure loader stops even on error
       }
     };
 
     fetchNewProducts();
-  }, [setAllProducts]);
+  }, [setAllProducts, baseURL, loading]);
 
   // Combine local and new products
-  // const combinedProducts = [...products, ...newProducts];
   const combinedProducts = [...newProducts];
 
   // Filter products by category
@@ -46,7 +51,7 @@ export default function ShopCategory(props) {
   );
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />; // Display loader while fetching data
   }
 
   return (

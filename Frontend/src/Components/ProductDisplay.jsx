@@ -3,6 +3,7 @@ import star_icon from "./assets/star_icon.png";
 import star_dull_icon from "./assets/star_dull_icon.png";
 import { ShopContext } from "../Context/ShopContext";
 import { useParams } from "react-router-dom";
+import Loader from "../Context/pages/Loader";
 
 const ProductDisplay = () => {
   const { productId } = useParams();
@@ -54,7 +55,7 @@ const ProductDisplay = () => {
   };
 
   if (!product) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (

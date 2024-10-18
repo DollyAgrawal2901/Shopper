@@ -1,28 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import Item from '../Items/Item';
+import Loader from '../../Context/pages/Loader'; // Assuming you have a Loader component
 
 export default function Popular() {
   const [popularProducts, setPopularProducts] = useState([]);
-  const baseURL =  import.meta.env.VITE_API_URL;
+  const [loading, setLoading] = useState(true); // Loading state
+  const baseURL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Fetch popular products from the backend
     const fetchPopularProducts = async () => {
       try {
-        const response = await fetch(`${baseURL}/popular-products`);  
+        const response = await fetch(`${baseURL}/popular-products`);
         
         if (!response.ok) {
-          throw new Error("Network response was not ok"); 
+          throw new Error("Network response was not ok");
         }
+        
         const data = await response.json();
         setPopularProducts(data);
       } catch (error) {
         console.error("Error fetching popular products:", error);
+      } finally {
+        setLoading(false); // Hide loader after fetching is complete
       }
     };
 
-    fetchPopularProducts();
-  }, []);
+    fetchPopularProducts(); // Start fetching data in parallel
+  }, [baseURL]);
+
+  if (loading) {
+    return <Loader />; // Show loader while fetching data
+  }
 
   return (
     <div className="flex flex-col items-center gap-[10px] h-[90vh]">

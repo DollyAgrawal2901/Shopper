@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Item from './Items/Item';
+import Loader from '../Context/pages/Loader'; // Assuming you have a Loader component
 
 export default function NewCollection() {
   const [newCollection, setNewCollection] = useState([]);
-  const baseURL =  import.meta.env.VITE_API_URL;
-
+  const [loading, setLoading] = useState(true); // Loading state
+  const baseURL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Fetch new collection data from backend
@@ -15,10 +16,17 @@ export default function NewCollection() {
         setNewCollection(data);
       } catch (error) {
         console.error("Error fetching new collections:", error);
+      } finally {
+        setLoading(false); // Hide loader after fetching is complete
       }
     };
-    fetchNewCollections();
-  }, []);
+
+    fetchNewCollections(); // Start fetching data in parallel
+  }, [baseURL]);
+
+  if (loading) {
+    return <Loader />; // Show loader while data is being fetched
+  }
 
   return (
     <div className="flex flex-col items-center gap-[20px] mb-[100px]">

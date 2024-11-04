@@ -18,6 +18,7 @@ const Profile = () => {
   const baseURL =  import.meta.env.VITE_API_URL;
 
   useEffect(() => {
+    window.scrollTo(0, 0); 
     const token = localStorage.getItem("authToken");
 
     if (!token) {

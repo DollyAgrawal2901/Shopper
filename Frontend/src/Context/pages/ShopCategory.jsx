@@ -65,7 +65,7 @@ export default function ShopCategory(props) {
           Sort by <img src={dropdown_icon} alt="" />
         </div>
       </div>
-      <div className='my-[20px] mx-[170px] grid grid-cols-4 gap-y-[80px]'>
+      <div className='my-[20px] mx-[100px] grid grid-cols-4 gap-y-[80px]'>
         {filteredProducts.length === 0 ? (
           <p className='text-center text-gray-500 py-4'>No products available</p>
         ) : (

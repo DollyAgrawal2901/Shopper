@@ -6,7 +6,7 @@ import hero_image from "../assets/hero_image.png";
 export default function () {
   return (
     <div className="h-screen bg-gradient-to-r from-[#fce1ff] to-[#ffea22] to-[60%] flex ">
-        <div className="flex-1 flex flex-col justify-center gap-[20px] pl-[180px] leading-[1.1]">
+        <div className="flex-1 flex flex-col mt-14 gap-[20px] pl-[180px] leading-[1.1]">
             <h2 className="text-slate-900 text-[26px] font-semibold">NEW ARRIVALS ONLY</h2>
             <div>
                 <div className="flex items-center gap-[20px]">
@@ -22,7 +22,7 @@ export default function () {
             </div>
         </div>
         <div className="flex-1 flex items-center justify-center">
-            <img src={hero_image} alt="" />
+            <img src={hero_image} alt="" className="w-[470px] mt-[-90px]"/>
         </div>
     </div>
   );

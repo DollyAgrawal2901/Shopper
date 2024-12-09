@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 export default function (props) {
   return (
-    <div className='w-[350px] hover:scale-[1.05] transition duration-[0.6s]'>
+    <div className='w-[300px] hover:scale-[1.05] transition duration-[0.6s]'>
         <Link to={`/product/${props.id}`}><img onClick={window.scrollTo(0,0)} src={props.image} alt="" /></Link>
         <p className='my-1.5'>{props.name}</p>   
         

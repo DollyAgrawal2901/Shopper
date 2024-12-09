@@ -59,20 +59,20 @@ const ProductDisplay = () => {
   }
 
   return (
-    <div className='flex'>
+    <div className='flex ml-14'>
       <div className='flex gap-[17px]'>
-        <div className='flex flex-col gap-[16px]'>
-          <img className='h-[163px]' src={product.image} alt="" />
-          <img className='h-[163px]' src={product.image} alt="" />
-          <img className='h-[163px]' src={product.image} alt="" />
-          <img className='h-[163px]' src={product.image} alt="" />
+        <div className='flex flex-col gap-[16px] justify-center'>
+          <img className='w-[80px]' src={product.image} alt="" />
+          <img className='w-[80px]' src={product.image} alt="" />
+          <img className='w-[80px]' src={product.image} alt="" />
+          <img className='w-[80px]' src={product.image} alt="" />
         </div>
         <div>
-          <img className='w-[586px] h-[700px]' src={product.image} alt="" />
+          <img className='w-[406px] ' src={product.image} alt="" />
         </div>
       </div>
       <div className='my-[0px] mx-[70px] flex flex-col'>
-        <h1 className='text-zinc-800 text-[40px] font-bold'>{product.name}</h1>
+        <h1 className='text-zinc-800 text-[30px] font-bold'>{product.name}</h1>
         <div className='flex items-center mt-[13px] gap-[5px] text-zinc-700 text-[16px]'>
           <img src={star_icon} alt="" />
           <img src={star_icon} alt="" />
@@ -81,7 +81,7 @@ const ProductDisplay = () => {
           <img src={star_dull_icon} alt="" />
           <p>(122)</p>
         </div>
-        <div className='flex my-[10px] mx-[0px] gap-[30px] text-[24px] font-bold'>
+        <div className='flex my-[10px] mx-[0px] gap-[30px] text-[20px] font-bold'>
           <div className='text-slate-600 line-through'>
             ${product.old_price}
           </div>
